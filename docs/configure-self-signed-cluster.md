@@ -21,14 +21,14 @@ Next, run the install script as usual
 Once the fulcio-system ns exists, create the ingress-cert secret in the fulcio-system namespace
 
 ```bash
-oc create secret generic -n fulcio-system clustercert --from-file=/path/to/clustercert/tls.crt
+oc create secret generic -n openshift-fulcio-system clustercert --from-file=/path/to/clustercert/tls.crt
 ```
 
 Finally, patch the fulcio-server deployment in order for
 fulcio to trust the ingress certificate for the keycloak OIDC endpoint.
 
 ```bash
-oc patch deployment/fulcio-server -n fulcio-system --patch-file /path/to/securesign/sigstore-ocp/hack/fulcio-patch-self-signed-oidc.yaml
+oc patch deployment/fulcio-server -n openshift-fulcio-system --patch-file /path/to/securesign/sigstore-ocp/hack/fulcio-patch-self-signed-oidc.yaml
 ```
 
 Now wait for all jobs to complete, then sign as usual. Refer to [the sign and verify doc](sign-verify.md).

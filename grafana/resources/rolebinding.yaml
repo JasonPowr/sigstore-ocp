@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: grafana-serviceaccount
-  namespace: trusted-artifact-signer-monitoring
+  namespace: openshift-trusted-artifact-signer-monitoring

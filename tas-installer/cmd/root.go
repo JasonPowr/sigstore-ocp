@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	fulcioNamespace      = "fulcio-system"
-	rekorNamespace       = "rekor-system"
-	monitoringNamespace  = "trusted-artifact-signer-monitoring"
-	tasNamespace         = "trusted-artifact-signer"
+	fulcioNamespace      = "openshift-fulcio-system"
+	rekorNamespace       = "openshift-rekor-system"
+	monitoringNamespace  = "openshift-trusted-artifact-signer-monitoring"
+	tasNamespace         = "openshift-trusted-artifact-signer"
 	tasReleaseName       = "trusted-artifact-signer"
 	fulcioCertSecretName = "fulcio-secret-rh"
 	rekorPrivateKey      = "rekor-private-key"

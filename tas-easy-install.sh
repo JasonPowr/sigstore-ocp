@@ -109,23 +109,23 @@ openssl ec -in file_ca_key.pem -passin pass:"$password" -pubout -out file_ca_pub
 openssl req -new -x509 -days 365 -key file_ca_key.pem -passin pass:"$password"  -out fulcio-root.pem -passout pass:"$password" -subj "/CN=$common_name/emailAddress=$email_address/O=$organization_name"
 openssl ecparam -name prime256v1 -genkey -noout -out rekor_key.pem
 
-segment_backup_job=$(oc get job -n trusted-artifact-signer-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
+segment_backup_job=$(oc get job -n openshift-trusted-artifact-signer-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
 if [[ -n $segment_backup_job ]]; then
-    oc delete job $segment_backup_job -n trusted-artifact-signer-monitoring
+    oc delete job $segment_backup_job -n openshift-trusted-artifact-signer-monitoring
 fi
 
-oc new-project trusted-artifact-signer-monitoring > /dev/null 2>&1
+oc new-project openshift-trusted-artifact-signer-monitoring > /dev/null 2>&1
 
-pull_secret_exists=$(oc get secret pull-secret -n trusted-artifact-signer-monitoring --ignore-not-found=true)
+pull_secret_exists=$(oc get secret pull-secret -n openshift-trusted-artifact-signer-monitoring --ignore-not-found=true)
 if [[ -n $pull_secret_exists ]]; then
-    read -p "Secret \"pull-secret\" in namespace \"trusted-artifact-signer-monitoring\" already exists. Overwrite it (Y/N)?: " -n1 overwrite_pull_secret
+    read -p "Secret \"pull-secret\" in namespace \"openshift-trusted-artifact-signer-monitoring\" already exists. Overwrite it (Y/N)?: " -n1 overwrite_pull_secret
     echo ""
     if [[ $overwrite_pull_secret == "Y" || $overwrite_pull_secret == 'y' ]]; then
         read -p "Please enter the absolute path to the pull-secret.json file:
 " pull_secret_path
         file_exists=$(ls $pull_secret_path 2>/dev/null)
         if [[ -n $file_exists ]]; then
-            oc create secret generic pull-secret -n trusted-artifact-signer-monitoring --from-file=$pull_secret_path --dry-run=client -o yaml | oc replace -f -
+            oc create secret generic pull-secret -n openshift-trusted-artifact-signer-monitoring --from-file=$pull_secret_path --dry-run=client -o yaml | oc replace -f -
         else
             echo "pull secret was not found based on the path provided: $pull_secret_path"
             exit 0
@@ -138,23 +138,23 @@ if [[ -n $pull_secret_exists ]]; then
 else
     read -p "Please enter the absolute path to the pull-secret.json file:
 " pull_secret_path
-    oc create secret generic pull-secret -n trusted-artifact-signer-monitoring --from-file=$pull_secret_path
+    oc create secret generic pull-secret -n openshift-trusted-artifact-signer-monitoring --from-file=$pull_secret_path
 fi
 
 rm unenc.key
 popd > /dev/null
 
-oc create ns fulcio-system
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem --from-literal=password="$password" --dry-run=client -o yaml | oc apply -f-
+oc create ns openshift-fulcio-system
+oc -n openshift-fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem --from-literal=password="$password" --dry-run=client -o yaml | oc apply -f-
 
-oc create ns rekor-system
-oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+oc create ns openshift-rekor-system
+oc -n openshift-rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
 # TODO: uncomment to install from helm repository, install from the local repo checkout for now
 #helm repo add trusted-artifact-signer https://repo-securesign-helm.apps.open-svc-sts.k1wl.p1.openshiftapps.com/helm-charts
 #helm repo update
-#OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm install --debug trusted-artifact-signer trusted-artifact-signer/trusted-artifact-signer -n trusted-artifact-signer --create-namespace --values -
-OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values -
+#OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm install --debug trusted-artifact-signer trusted-artifact-signer/trusted-artifact-signer -n openshift-trusted-artifact-signer --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n openshift-trusted-artifact-signer --create-namespace --values -
 
 # Create the script to initialize the environment variables for the service endpoints
 generate_env_script

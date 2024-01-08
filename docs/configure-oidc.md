@@ -18,7 +18,7 @@ Once created, the credentials should be available in the Google Cloud Console un
 Once RHTAS is installed, issue
 
 ```
-oc edit cm fulcio-server-config -n fulcio-system
+oc edit cm fulcio-server-config -n openshift-fulcio-system
 ```
 
 Update the configuration with the client ID and client secret, as well as the Google IdP issuer URL:
@@ -43,10 +43,10 @@ kind: ConfigMap
 Restart Fulcio with
 
 ```
-oc delete $(oc get pods -n fulcio-system -o name) -n fulcio-system
+oc delete $(oc get pods -n openshift-fulcio-system -o name) -n openshift-fulcio-system
 ```
 
-You can check that the config updated properly with `oc describe cm fulcio-server-config -n fulcio-system`.
+You can check that the config updated properly with `oc describe cm fulcio-server-config -n openshift-fulcio-system`.
 
 ### Set OIDC issuer
 

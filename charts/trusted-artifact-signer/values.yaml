@@ -16,7 +16,7 @@ configs:
     rolebindings:
       - segment-backup-job
     name: segment-backup-job
-    namespace: trusted-artifact-signer-monitoring
+    namespace: openshift-trusted-artifact-signer-monitoring
   clientserver:
     # -- Whether to create the OpenShift resource 'ConsoleCLIDownload' for each binary.
     # -- This can only be enabled if the OpenShift CRD is registered.
@@ -25,14 +25,14 @@ configs:
     route: true
     name: tas-clients
     namespace_create: true
-    namespace: trusted-artifact-signer-clientserver
+    namespace: openshift-trusted-artifact-signer-clientserver
     image:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
       version: 0c8c0403842deb9ac9cc97b72cd97e74871cd133
       pullPolicy: IfNotPresent
   ctlog:
-    namespace: ctlog-system
+    namespace: openshift-ctlog-system
     namespace_create: true
     # -- Names for rolebindings to add clusterroles to ctlog serviceaccounts.
     # The names must match the serviceaccount names in the ctlog namespace.
@@ -43,7 +43,7 @@ configs:
 
   rekor:
     namespace_create: true
-    namespace: rekor-system
+    namespace: openshift-rekor-system
     # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
     # The names must match the serviceaccount names in the rekor namespace.
     rolebindings:
@@ -72,7 +72,7 @@ configs:
 
   fulcio:
     namespace_create: true
-    namespace: fulcio-system
+    namespace: openshift-fulcio-system
     # -- Names for rolebindings to add clusterroles to fulcio serviceaccounts.
     # The names must match the serviceaccount names in the fulcio namespace.
     rolebindings:
@@ -111,7 +111,7 @@ configs:
 
   trillian:
     namespace_create: true
-    namespace: trillian-system
+    namespace: openshift-trillian-system
     # -- names for rolebindings to add clusterroles to trillian serviceaccounts.
     # The names must match the serviceaccount names in the trillian namespace.
     rolebindings:
@@ -120,7 +120,7 @@ configs:
       - trillian-mysql
 
   tuf:
-    namespace: tuf-system
+    namespace: openshift-tuf-system
     namespace_create: true
     # -- names for rolebindings to add clusterroles to tuf serviceaccounts.
     # The names must match the serviceaccount names in the tuf namespace.
@@ -130,7 +130,7 @@ configs:
 
   cosign_deploy:
     enabled: false
-    namespace: cosign
+    namespace: openshift-cosign
     namespace_create: true
     # -- names for rolebindings to add clusterroles to cosign serviceaccounts.
     # The names must match the serviceaccount names in the cosign namespace.
@@ -153,11 +153,11 @@ rbac:
 scaffold:
   ctlog:
     enabled: true
-    forceNamespace: ctlog-system
+    forceNamespace: openshift-ctlog-system
     fullnameOverride: ctlog
     namespace:
       create: false
-      name: ctlog-system
+      name: openshift-ctlog-system
     server:
       image:
         registry: registry.redhat.io
@@ -178,6 +178,7 @@ scaffold:
         repository: rhtas-tech-preview/createctconfig-rhel9
         version: sha256:10155f8c2b73b12599124895b2db0c9e08b2c3953df7361574fd08467c42fd04
         pullPolicy: IfNotPresent
+      fulcioURL: "http://fulcio-server.openshift-fulcio-system.svc"
     createcerts:
       fullnameOverride: ctlog-createcerts
     createtree:
@@ -188,15 +189,19 @@ scaffold:
         repository: rhtas-tech-preview/createtree-rhel9
         version: sha256:8a80def74e850f2b4c73690f86669a1fe52c1043c175610750abb4644e63d4ab
         pullPolicy: IfNotPresent
+    trillian:
+      namespace: openshift-trillian-system
   fulcio:
     enabled: true
-    forceNamespace: fulcio-system
+    forceNamespace: openshift-fulcio-system
     ctlog:
       enabled: false
       createctconfig:
         logPrefix: sigstorescaffolding
+      namespace:
+        name: openshift-ctlog-system
     namespace:
-      name: fulcio-system
+      name: openshift-fulcio-system
       create: false
     createcerts:
       enabled: false
@@ -229,13 +234,14 @@ scaffold:
 
   rekor:
     enabled: true
-    forceNamespace: rekor-system
+    forceNamespace: openshift-rekor-system
     fullnameOverride: rekor
     namespace:
-      name: rekor-system
+      name: openshift-rekor-system
       create: false
     trillian:
       enabled: false
+      forceNamespace: openshift-trillian-system
     redis:
       fullnameOverride: rekor-redis
     server:
@@ -275,11 +281,11 @@ scaffold:
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
-    forceNamespace: trillian-system
+    forceNamespace: openshift-trillian-system
     fullnameOverride: trillian
     namespace:
       create: false
-      name: trillian-system
+      name: openshift-trillian-system
     createdb:
       image:
         registry: registry.redhat.io
@@ -365,8 +371,8 @@ scaffold:
   tuf:
     namespace:
       create: false
-      name: tuf-system
-    forceNamespace: tuf-system
+      name: openshift-tuf-system
+    forceNamespace: openshift-tuf-system
     fullnameOverride: tuf
     secrets:
       fulcio:
@@ -405,9 +411,9 @@ scaffold:
 
   tsa:
     enabled: false
-    forceNamespace: tsa-system
+    forceNamespace: openshift-tsa-system
     namespace:
       create: false
-      name: tsa-system
+      name: openshift-tsa-system
     server:
       fullnameOverride: tsa-server

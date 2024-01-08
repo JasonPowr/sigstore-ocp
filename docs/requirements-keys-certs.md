@@ -17,7 +17,7 @@ Either create a secret in the fulcio-system namespace with:
 # Note replace <PASSWORD> with value of password to decrypt signing key created above.
 # if necessary, 'oc create ns fulcio-system'
 
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem  --from-literal=password=<PASSWORD> --dry-run=client -o yaml | oc apply -f-
+oc -n openshift-fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem  --from-literal=password=<PASSWORD> --dry-run=client -o yaml | oc apply -f-
 ```
 
 Or, add the following to an overriding Values file injecting the public key, private key, and password used for the private key:
@@ -43,11 +43,11 @@ Generate a signer key:
 ./rekor-create-signer-key.sh
 ```
 
-Either create a secret in the rekor-system namespace with:
+Either create a secret in the openshift-rekor-system namespace with:
 
 ```bash
 # if necessary, 'oc create ns rekor-system'
-oc -n rekor-system create secret generic rekor-private-key --from-file=private=rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+oc -n openshift-rekor-system create secret generic rekor-private-key --from-file=private=rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 ```
 
 Or, add the following to override the values file injecting the signer key:

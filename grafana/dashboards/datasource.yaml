@@ -2,7 +2,7 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
   name: prometheus-grafana
-  namespace: sigstore-monitoring
+  namespace: openshift-trusted-artifact-signer-monitoring
 spec:
   name: prometheus-grafana.yaml
   datasources:
@@ -24,14 +24,14 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
   name: trillian-grafana
-  namespace: sigstore-monitoring
+  namespace: openshift-trusted-artifact-signer-monitoring
 spec:
   name: MySQL-datasource.yaml
   datasources:
     - name: MySQL
       type: mysql
       access: proxy
-      url: trillian-mysql.trillian-system.svc.cluster.local:3306
+      url: trillian-mysql.openshift-trillian-system.svc.cluster.local:3306
       user: ${MYSQL_USER}
       secureJsonData:
         password: ${MYSQL_PASSWORD}

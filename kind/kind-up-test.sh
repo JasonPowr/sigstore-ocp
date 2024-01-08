@@ -25,11 +25,11 @@ chmod go-r ~/.kube/config
 
 oc config use-context kind-kind
 
-oc create ns fulcio-system
-oc create ns rekor-system
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
+oc create ns openshift-fulcio-system
+oc create ns openshift-rekor-system
+oc -n openshift-fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
 
-oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+oc -n openshift-rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
 #install OLM
 kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/crds.yaml
@@ -53,5 +53,5 @@ do
 done
 
 # install charts
-helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n trusted-artifact-signer --create-namespace --values ./examples/values-kind-sigstore.yaml && \
-helm test trusted-artifact-signer -n trusted-artifact-signer
+helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n openshift-trusted-artifact-signer --create-namespace --values ./examples/values-kind-sigstore.yaml && \
+helm test trusted-artifact-signer -n openshift-trusted-artifact-signer

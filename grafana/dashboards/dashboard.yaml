@@ -2,7 +2,7 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
   name: trusted-artifact-signer-monitoring-dashboard
-  namespace: trusted-artifact-signer-monitoring
+  namespace: openshift-trusted-artifact-signer-monitoring
   labels:
     app: grafana
 spec:
@@ -1163,8 +1163,8 @@ spec:
           {
             "current": {
               "selected": true,
-              "text": "trillian-system",
-              "value": "trillian-system"
+              "text": "openshift-trillian-system",
+              "value": "openshift-trillian-system"
             },
             "hide": 0,
             "includeAll": false,
@@ -1174,13 +1174,13 @@ spec:
             "options": [
               {
                 "selected": false,
-                "text": "tuf-system",
-                "value": "tuf-system"
+                "text": "openshift-tuf-system",
+                "value": "openshift-tuf-system"
               },
               {
                 "selected": true,
-                "text": "trillian-system",
-                "value": "trillian-system"
+                "text": "openshift-trillian-system",
+                "value": "openshift-trillian-system"
               },
               {
                 "selected": false,
@@ -1189,26 +1189,26 @@ spec:
               },
               {
                 "selected": false,
-                "text": "rekor-system",
-                "value": "rekor-system"
+                "text": "openshift-rekor-system",
+                "value": "openshift-rekor-system"
               },
               {
                 "selected": false,
-                "text": "fulcio-system",
-                "value": "fulcio-system"
+                "text": "openshift-fulcio-system",
+                "value": "openshift-fulcio-system"
               },
               {
                 "selected": false,
-                "text": "ctlog-system",
-                "value": "ctlog-system"
+                "text": "openshift-ctlog-system",
+                "value": "openshift-ctlog-system"
               },
               {
                 "selected": false,
-                "text": "cosign",
-                "value": "cosign"
+                "text": "openshift-cosign",
+                "value": "openshift-cosign"
               }
             ],
-            "query": "tuf-system,trillian-system,sigstore,rekor-system,fulcio-system,ctlog-system,cosign",
+            "query": "openshift-tuf-system,openshift-trillian-system,openshift-sigstore,openshift-rekor-system,openshift-fulcio-system,openshift-ctlog-system,openshift-cosign",
             "queryValue": "",
             "skipUrlSync": false,
             "type": "custom"
@@ -1221,7 +1221,7 @@ spec:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Sigstore Monitoring",
+      "title": "Trusted Artifact Signer Monitoring",
       "uid": "b8e5cb61-a672-401c-a406-a5360c8e384a",
       "version": 1,
       "weekStart": ""

@@ -65,7 +65,7 @@ fi
 # Install SSO Operator and Keycloak service
 install_tas_grafana() {
     oc apply -k grafana/operator
-    check_pod_status "trusted-artifact-signer-monitoring" "grafana-operator-controller-manager"
+    check_pod_status "openshift-trusted-artifact-signer-monitoring" "grafana-operator-controller-manager"
     # Check the return value from the function
     if [ $? -ne 0 ]; then
         echo "Pod status check failed. Exiting the script."
@@ -73,7 +73,7 @@ install_tas_grafana() {
     fi
 
     oc apply -k grafana/instance
-    check_pod_status "trusted-artifact-signer-monitoring" "grafana-deployment"
+    check_pod_status "openshift-trusted-artifact-signer-monitoring" "grafana-deployment"
     # Check the return value from the function
     if [ $? -ne 0 ]; then
         echo "Pod status check failed. Exiting the script."
@@ -85,10 +85,10 @@ install_tas_grafana() {
     sleep 15
 
     # Setup environment variables
-    export BEARER_TOKEN=$(oc -n trusted-artifact-signer-monitoring get secrets grafana-sa-token -o=jsonpath="{.data.token}" | base64 -d)
-    export MYSQL_USER=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-user}" | base64 -d)
-    export MYSQL_PASSWORD=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-password}" | base64 -d)
-    export MYSQL_DATABASE=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-database}" | base64 -d)
+    export BEARER_TOKEN=$(oc -n openshift-trusted-artifact-signer-monitoring get secrets grafana-sa-token -o=jsonpath="{.data.token}" | base64 -d)
+    export MYSQL_USER=$(oc -n openshift-trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-user}" | base64 -d)
+    export MYSQL_PASSWORD=$(oc -n openshift-trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-password}" | base64 -d)
+    export MYSQL_DATABASE=$(oc -n openshift-trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-database}" | base64 -d)
 
     # Modify datasource and create dashboard
     envsubst < grafana/dashboards/datasource.yaml | oc apply -f -
@@ -99,7 +99,7 @@ install_tas_grafana() {
     sleep 15
 
     # Get route to connect to the dashboard
-    oc -n trusted-artifact-signer-monitoring get routes
+    oc -n openshift-trusted-artifact-signer-monitoring get routes
 }
 
 install_tas_grafana

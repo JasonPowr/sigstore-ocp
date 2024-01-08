@@ -26,17 +26,17 @@ spec:
         - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"
         - name: COSIGN_FULCIO_URL
-          value: "http://fulcio-server.fulcio-system.svc"
+          value: "http://fulcio-server.openshift-fulcio-system.svc"
         - name: COSIGN_REKOR_URL
-          value: "http://rekor-server.rekor-system.svc"
+          value: "http://rekor-server.openshift-rekor-system.svc"
         - name: COSIGN_OIDC_ISSUER
           value: "http://keycloak-internal.keycloak-system.svc/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
         - name: COSIGN_CERTIFICATE_OIDC_ISSUER
           value: "http://keycloak-internal.keycloak-system.svc/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
         - name: COSIGN_MIRROR
-          value: "http://tuf-server.tuf-system.svc"
+          value: "http://tuf-server.openshift-tuf-system.svc"
         - name: COSIGN_ROOT
-          value: "http://tuf-server.tuf-system.svc/root.json"
+          value: "http://tuf-server.openshift-tuf-system.svc/root.json"
         - name: COSIGN_YES
           value: "true"
         command: ["/bin/sh", "-c"]

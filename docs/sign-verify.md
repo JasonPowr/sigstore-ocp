@@ -75,18 +75,18 @@ deployment pod specification.
 1. Get the name of the pod.
 
 ``` 
-oc get pods -n cosign 
+oc get pods -n openshift-cosign 
 ```
 
 2. Initialize the TUF roots.
 
 ```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize'
+oc exec -n openshift-cosign <pod_name> -- /bin/sh -c 'cosign initialize'
 ```
 
 3. Login to the image repository of your choice using cosign.
 ```
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign login <repo> -u <username> -p <password>'
+oc exec -n openshift-cosign <pod_name> -- /bin/sh -c 'cosign login <repo> -u <username> -p <password>'
 ```
 
 4. Retrieve `id_token` from the OIDC provider.
@@ -102,13 +102,13 @@ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 
 5. Sign the container.
 ```
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --identity-token=<id_token> <image>'
+oc exec -n openshift-cosign <pod_name> -- /bin/sh -c 'cosign sign -y --identity-token=<id_token> <image>'
 ```
 
 6. Verify the signed image. Again, this example assumes `Keycloak` is the OIDC provider.
 
 ```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --certificate-identity-regexp sigstore-user <image>'
+oc exec -n openshift-cosign <pod_name> -- /bin/sh -c 'cosign verify --certificate-identity-regexp sigstore-user <image>'
 ```
 
 If the signature verification did not result in an error, the deployment of Sigstore was successful!
